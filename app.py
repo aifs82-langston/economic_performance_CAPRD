@@ -157,7 +157,7 @@ def main():
     with col1:
         st.image("FullLogo.png", use_container_width=True)
     with col2:
-        st.title("Monitor del Índice de Desempeño Económico (IDEW) para la región Centroamérica, Panamá y República Dominicana (CAPRD)")
+        st.title("📊 Monitor del Índice de Desempeño Económico (IDEW) para la región Centroamérica, Panamá y República Dominicana (CAPRD)")
         st.info("Este dashboard interactivo calcula y visualiza el IDEW para los países de la región CAPRD.")
         st.markdown("Alfredo Ibrahim Flores Sarria ©2026")
 
