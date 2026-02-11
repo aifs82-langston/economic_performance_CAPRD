@@ -159,10 +159,10 @@ def main():
     pais_seleccionado = st.sidebar.selectbox("Seleccione un país", list(paises.keys()))
     
     st.sidebar.markdown("---")
-    st.sidebar.info("Este dashboard calcula y visualiza el Índice de Desempeño Económico de Bienestar (IDEW) para los países de la región CAPRD.")
+    st.sidebar.info("Este dashboard calcula y visualiza el Índice de Desempeño Económico Económico (IDEW) para los países de la región CAPRD.")
 
     # Encabezado principal
-    st.title(f"📊 Monitor IDEW: {pais_seleccionado}")
+    st.title(f"📊 Índice de Desempeño Económico: {pais_seleccionado}")
     st.markdown("---")
 
     ruta_archivo = paises[pais_seleccionado]
