@@ -152,18 +152,21 @@ def main():
         "República Dominicana": "data/IDEDO_06122025.xlsx"
     }
 
-    # Interfaz lateral (Sidebar)
-    st.sidebar.image("FullLogo.png", use_container_width=True)
-  
-    st.sidebar.title("Configuración")
-    pais_seleccionado = st.sidebar.selectbox("Seleccione un país", list(paises.keys()))
-    
-    st.sidebar.markdown("---")
-    st.sidebar.info("Este dashboard calcula y visualiza el Índice de Desempeño Económico Económico (IDEW) para los países de la región CAPRD.")
+    # Encabezado principal (Reemplazo del Sidebar)
+    col1, col2 = st.columns([1, 4])
+    with col1:
+        st.image("FullLogo.png", use_container_width=True)
+    with col2:
+        st.title("Monitor IDEW - Región CAPRD")
+        st.info("Este dashboard calcula y visualiza el Índice de Desempeño Económico (IDEW) para los países de la región.")
 
-    # Encabezado principal
-    st.title(f"📊 Índice de Desempeño Económico: {pais_seleccionado}")
     st.markdown("---")
+
+    # Selector de país centrado en la página principal
+    pais_seleccionado = st.selectbox("Seleccione un país para analizar:", list(paises.keys()))
+
+    st.markdown("---")
+    st.title(f"📊 Índice de Desempeño Económico: {pais_seleccionado}")
 
     ruta_archivo = paises[pais_seleccionado]
 
@@ -226,8 +229,8 @@ def main():
         tabla['Calificación'] = tabla['IDEW'].apply(lambda x: obtener_calificacion(x) if pd.notna(x) else np.nan)
         
         # Usamos columnas de Streamlit para que la tabla no ocupe todo el ancho de forma antiestética
-        col1, col2, col3 = st.columns([1, 2, 1])
-        with col2:
+        col_tabla_1, col_tabla_2, col_tabla_3 = st.columns([1, 2, 1])
+        with col_tabla_2:
             st.dataframe(tabla, use_container_width=True)
 
     except FileNotFoundError:
