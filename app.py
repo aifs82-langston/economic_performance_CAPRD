@@ -159,6 +159,7 @@ def main():
     with col2:
         st.title("Monitor del Índice de Desempeño Económico (IDEW) para la región Centroamérica, Panamá y República Dominicana (CAPRD)")
         st.info("Este dashboard calcula y visualiza el IDEW para los países de la región CAPRD.")
+        st.markdown("Alfredo Ibrahim Flores Sarria")
 
     st.markdown("---")
 
