@@ -135,7 +135,7 @@ def graficar_linea_idew(serie_idew, pais, inicio=2000, fin=2030):
         margen = max(2, 0.05*(ymax - ymin))
         ax.set_ylim(ymin - margen, ymax + margen)
     plt.tight_layout()
-    return fig # Modificado para devolver la figura en lugar de mostrarla directamente
+    return fig
 
 # ==============================
 # LÓGICA PRINCIPAL DE STREAMLIT
@@ -153,7 +153,6 @@ def main():
     }
 
     # Interfaz lateral (Sidebar)
-    
     st.sidebar.image("FullLogo.png", use_container_width=True)
   
     st.sidebar.title("Configuración")
@@ -204,6 +203,7 @@ def main():
         
         # Renderizar en Streamlit
         st.pyplot(fig1)
+        plt.close(fig1) # <--- CORRECCIÓN DE MEMORIA APLICADA
 
         st.markdown("---")
 
@@ -214,6 +214,7 @@ def main():
         
         fig2 = graficar_linea_idew(serie_idew, pais=pais_seleccionado, inicio=inicio, fin=fin)
         st.pyplot(fig2)
+        plt.close(fig2) # <--- CORRECCIÓN DE MEMORIA APLICADA
 
         st.markdown("---")
 
