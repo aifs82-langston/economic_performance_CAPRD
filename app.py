@@ -176,40 +176,65 @@ def main():
         df = cargar_datos(ruta_archivo)
         theta, _ = calcular_theta_sdh(df)
 
-        # 1. Gráfico de Termómetro y Componentes
-        st.subheader("Comparativo Reciente (2023 - 2025)")
-        fig1 = plt.figure(figsize=(22, 10))
-        gs = fig1.add_gridspec(nrows=2, ncols=3,
-                              height_ratios=[0.6, 3],
-                              width_ratios=[1, 1, 1],
-                              hspace=0.1, wspace=0.3)
-
-        for col, año in enumerate([2023, 2024, 2025]):
-            # Validar si el año existe en los datos
-            if año in df.index:
-                idew, datos = calcular_idew(df, theta, año)
-                calificacion = obtener_calificacion(idew)
-                
-                ax_term = fig1.add_subplot(gs[0, col])
-                crear_termometro(ax_term, idew, año, calificacion)
-                
-                ax_comp = fig1.add_subplot(gs[1, col])
-                crear_componentes(ax_comp, datos, año)
-            else:
-                ax_vacio = fig1.add_subplot(gs[:, col])
-                ax_vacio.axis('off')
-                ax_vacio.text(0.5, 0.5, f"Datos de {año} no disponibles", 
-                              ha='center', va='center', fontsize=14, color='gray')
-
-        plt.subplots_adjust(left=0.07, right=0.93, top=0.88, bottom=0.12)
-        plt.suptitle(f"{pais_seleccionado.upper()}: COMPOSICIÓN DEL IDEW",
-                     x=0.5, y=1.03, fontsize=20, fontweight='bold', color='#2c3e50')
+# 1. Gráfico de Termómetro y Componentes
+        st.subheader("Comparativo por Años")
         
-        # Renderizar en Streamlit
-        st.pyplot(fig1)
-        plt.close(fig1) # <--- CORRECCIÓN DE MEMORIA APLICADA
+        # --- NUEVO: Selector interactivo de años ---
+        # Obtenemos los años disponibles en el índice del DataFrame
+        anios_disponibles = sorted(df.index.dropna().unique().tolist())
+        
+        # Definimos 2023, 2024, 2025 como default si existen; de lo contrario, los últimos 3
+        anios_default = [y for y in [2023, 2024, 2025] if y in anios_disponibles]
+        if not anios_default:
+            anios_default = anios_disponibles[-3:] if len(anios_disponibles) >= 3 else anios_disponibles
 
-        st.markdown("---")
+        # Widget de Streamlit para seleccionar múltiples años
+        anios_seleccionados = st.multiselect(
+            "Seleccione los años a comparar:",
+            options=anios_disponibles,
+            default=anios_default
+        )
+
+        if not anios_seleccionados:
+            st.warning("⚠️ Por favor, seleccione al menos un año para visualizar el comparativo.")
+        else:
+            # --- NUEVO: Configuración dinámica de la figura ---
+            n_cols = len(anios_seleccionados)
+            ancho_figura = max(10, 7 * n_cols) # Ajusta el ancho para que no se aprieten los gráficos
+            
+            fig1 = plt.figure(figsize=(ancho_figura, 10))
+            gs = fig1.add_gridspec(nrows=2, ncols=n_cols,
+                                  height_ratios=[0.6, 3],
+                                  hspace=0.1, wspace=0.3)
+
+            for col, año in enumerate(anios_seleccionados):
+                if año in df.index:
+                    idew, datos = calcular_idew(df, theta, año)
+                    calificacion = obtener_calificacion(idew)
+                    
+                    ax_term = fig1.add_subplot(gs[0, col])
+                    crear_termometro(ax_term, idew, año, calificacion)
+                    
+                    ax_comp = fig1.add_subplot(gs[1, col])
+                    crear_componentes(ax_comp, datos, año)
+                else:
+                    ax_vacio = fig1.add_subplot(gs[:, col])
+                    ax_vacio.axis('off')
+                    ax_vacio.text(0.5, 0.5, f"Datos de {año}\nno disponibles", 
+                                  ha='center', va='center', fontsize=14, color='gray')
+
+            plt.subplots_adjust(left=0.07, right=0.93, top=0.88, bottom=0.12)
+            
+            # Título dinámico basado en los años seleccionados
+            titulo_anios = ", ".join(map(str, anios_seleccionados))
+            plt.suptitle(f"{pais_seleccionado.upper()}: COMPOSICIÓN DEL IDEW ({titulo_anios})",
+                         x=0.5, y=1.03, fontsize=20, fontweight='bold', color='#2c3e50')
+            
+            # Renderizar en Streamlit
+            st.pyplot(fig1)
+            plt.close(fig1) # Cierre de memoria mantenido
+
+        
 
         # 2. Serie Histórica (Gráfico de línea)
         st.subheader("Evolución Histórica (2000 - 2030)")
