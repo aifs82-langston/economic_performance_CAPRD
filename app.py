@@ -159,6 +159,7 @@ def main():
     with col2:
         st.title("📈📉🖥️ Monitor del Índice de Desempeño Económico (IDEW) para la región Centroamérica, Panamá y República Dominicana (CAPRD)")
         st.info("Este dashboard interactivo calcula y visualiza el IDEW para los países de la región CAPRD.")
+        st.markdown("[Haz clic aquí para acceder al artículo en Substack](https://open.substack.com/pub/aifloressarria/p/la-fractura-del-desempeno-economico?utm_campaign=post-expanded-share&utm_medium=web)")
         st.markdown("Alfredo Ibrahim Flores Sarria ©2026")
 
     st.markdown("---")
